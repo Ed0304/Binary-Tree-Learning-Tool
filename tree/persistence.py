@@ -10,8 +10,13 @@ def save_tree(tree: Tree, filename: str):
         json.dump(data, f, indent=4)
 
 def load_tree(filename: str) -> Tree:
-    with open(filename, "r") as f:
-        data = json.load(f)
+    try: 
+        with open(filename, "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        print(f"[Error] {filename} not found.")
+        return Tree()
+    
 
     tree = Tree()
     for value in data.get("insert_order", []):
