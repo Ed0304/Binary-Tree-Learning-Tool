@@ -2,6 +2,7 @@ from tree.persistence import save_tree, load_tree
 from tree.binary_tree import Tree
 
 def run_cli(tree):
+    loaded_tree = None 
     terminated = False
     while not terminated:
         print("""
@@ -10,7 +11,7 @@ Welcome to the tree learning widget
 2. View Tree
 3. Insert/Delete Node
 4. Demonstrate Algorithm
-5. Delete Tree
+5. Remove Loaded Tree
 6. Convert Tree (Coming Soon)
 7. Exit Program
 """)
@@ -37,12 +38,18 @@ Welcome to the tree learning widget
                 if choice == 1:
                     tree = Tree()
                     print("Creating new tree...")
-                    tree.insert_order = []
-                    filename = input("Type filename (stored as JSON): ")
-                    filename += ".json"
-                    save_tree(tree,filename)
-                    print("Tree saved.")
-                    tree.reset()
+                    try:
+                        root = int(input("Type the starting value of the tree: "))
+                        tree.insert_order = [root]
+                        filename = input("Type filename (stored as JSON): ")
+                        filename += ".json"
+                        save_tree(tree,filename)
+                        print("Tree saved.")
+                        tree.reset()
+                    except ValueError:
+                        print("Invalid value for the root.")
+
+                    
 
                 elif choice == 2:
                     print("Loading tree...")
@@ -62,6 +69,10 @@ Welcome to the tree learning widget
 
         elif option == 2:
             print("View tree")
+            if loaded_tree is None:
+                print("Please upload a tree first.")
+            else:
+                pass
         elif option == 3:
             pass
         elif option == 5:

@@ -144,7 +144,10 @@ Welcome to the tree learning widget
         elif option == 2:
             print("View tree")
         elif option == 3:
-            pass
+            print("Insert/Delete Node")
+            print("Disclaimer: This feature doesn't allow you to delete the root of the tree")
+            print("Choose 'Delete Tree' instead")
+            print("1. Insert Node\n 2. Delete Node")
         elif option == 5:
             tree.reset()
             print("Tree deleted.")
