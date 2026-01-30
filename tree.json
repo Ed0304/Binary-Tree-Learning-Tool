@@ -1,6 +1,7 @@
 {
+    "name": "test",
     "type": "BST",
     "insert_order": [
-        4
+        5
     ]
 }

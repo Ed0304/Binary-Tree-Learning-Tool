@@ -1,7 +1,8 @@
 from tree.node import Node
 
 class Tree:
-    def __init__(self):
+    def __init__(self, name = "Untitled Tree"):
+        self.name = name
         self.root = None
         self.insert_order = []
 
