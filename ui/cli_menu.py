@@ -98,7 +98,16 @@ Welcome to the tree learning widget
                 print("Try to load one or create one if you didn't have any!")
             else:
                 while choice is not int:
-                    pass
+                    print("Alright, what do you want to do?")
+                    print("1. Add node")
+                    print("2. Delete node (proceed with caution!)")
+                    print("3. Return")
+                    choice = int(input("Choose a number: "))
+                    try:
+                        if choice == 1:
+                            pass
+                    except ValueError:
+                        print("Invalid selection. Please type a number.")
         elif option == 4:
             if tree is None or tree.root is None:
                 print("\nHey, it looks like you don’t have a tree yet.")
