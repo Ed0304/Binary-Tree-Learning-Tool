@@ -3,6 +3,7 @@ from tree.binary_tree import Tree
 
 def run_cli(tree):
     tree = None 
+    current_file = None
     terminated = False
     while not terminated:
         print("""
@@ -59,9 +60,10 @@ Welcome to the tree learning widget
                         tree.insert_order = [root]
                         filename = input("Type filename (stored as JSON): ")
                         filename += ".json"
+                        current_file = filename
                         tree_name = input("Enter tree name: ")
                         tree.name = tree_name
-                        save_tree(tree,filename)
+                        save_tree(tree,current_file)
                         print("Tree saved.")
                         tree.reset()
                     except ValueError:
@@ -72,11 +74,14 @@ Welcome to the tree learning widget
                 elif choice == 2:
                     filename = input("Enter the filename: ").strip() + ".json"
                     tree = load_tree(filename)
+                    current_file = filename
+
 
                     if tree.root is None:
                         print("Loaded file contains an empty tree.")
                     else:
                         print("Tree loaded successfully.")
+                        
                     break
 
                 elif choice == 3:
@@ -105,7 +110,29 @@ Welcome to the tree learning widget
                     choice = int(input("Choose a number: "))
                     try:
                         if choice == 1:
-                            pass
+                            
+                            try:
+                                value = int(input("Enter a number of the node: "))
+                                tree.insert(value)
+                                save_tree(tree,current_file)
+                            except ValueError:
+                                print("Only numbers are accepted.")
+                        
+                        elif choice == 2:
+
+                            try:
+                                value = int(input("Enter a number of the node: "))
+                                if value not in tree.insert_order:
+                                    print("The node doesn't exist inside the tree")
+                                else:
+                                    tree.delete(value)
+                                    save_tree(tree,current_file)
+                            except ValueError:
+                                print("Only numbers are accepted.")
+                        elif choice == 3:
+                            print("Returning to main menu...")
+                            break
+                            
                     except ValueError:
                         print("Invalid selection. Please type a number.")
         elif option == 4:
