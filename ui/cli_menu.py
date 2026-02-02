@@ -1,6 +1,6 @@
 from tree.persistence import save_tree, load_tree, display_tree
 from tree.binary_tree import Tree
-
+from tree.traversals import *
 def run_cli():
     tree = None 
     current_file = None
@@ -98,55 +98,109 @@ Welcome to the tree learning widget
                 display_tree(tree.root,0)
         elif option == 3:
             print("Insert/Delete Node")
+
             if tree is None or tree.root is None:
                 print("Hey, it seems there's no tree yet.")
                 print("Try to load one or create one if you didn't have any!")
             else:
-                while choice is not int:
-                    print("Alright, what do you want to do?")
+                while True:
+                    print("\nAlright, what do you want to do?")
                     print("1. Add node")
                     print("2. Delete node (proceed with caution!)")
                     print("3. Return")
-                    choice = int(input("Choose a number: "))
-                    try:
-                        if choice == 1:
-                            
-                            try:
-                                value = int(input("Enter a number of the node: "))
-                                success = tree.insert(value)
-                                if not success:
-                                    print("No duplicates allowed.")
-                                else:
-                                    save_tree(tree, current_file)
-                            except ValueError:
-                                print("Only numbers are accepted.")
-                        
-                        elif choice == 2:
 
-                            try:
-                                value = int(input("Enter a number of the node: "))
-                                if not tree.delete(value):
-                                    print("The node doesn't exist inside the tree.")
-                                else:
-                                    save_tree(tree, current_file)
-                            except ValueError:
-                                print("Only numbers are accepted.")
-                        elif choice == 3:
-                            print("Returning to main menu...")
-                            break
-                            
+                    try:
+                        choice = int(input("Choose a number: "))
                     except ValueError:
-                        print("Invalid selection. Please type a number.")
+                        print("Only numbers are accepted.")
+                        continue
+
+                    if choice == 1:
+                        print("Here's your tree:")
+                        display_tree(tree.root, 0)
+
+                        try:
+                            value = int(input("Enter a number of the node: "))
+                        except ValueError:
+                            print("Only numbers are accepted.")
+                            continue
+
+                        success = tree.insert(value)
+                        if not success:
+                            print("No duplicates allowed.")
+                        else:
+                            save_tree(tree, current_file)
+
+                    elif choice == 2:
+                        print("Here's your tree:")
+                        display_tree(tree.root, 0)
+
+                        try:
+                            value = int(input("Enter a number of the node: "))
+                        except ValueError:
+                            print("Only numbers are accepted.")
+                            continue
+
+                        success = tree.delete(value)
+                        if not success:
+                            print("The node doesn't exist inside the tree.")
+                        else:
+                            save_tree(tree, current_file)
+
+                    elif choice == 3:
+                        print("Returning to main menu...")
+                        break
+
+                    else:
+                        print("Invalid selection. Please choose 1–3.")
+
         elif option == 4:
             if tree is None or tree.root is None:
                 print("\nHey, it looks like you don’t have a tree yet.")
                 print("Create one, add a few nodes, and then we can start learning together, okay?\n")
             else:
-                print("\nAlright, this is where the learning begins!")
-                print("What are you curious about?\n")
-                print("1. Traversals (how the tree is explored)")
-                print("2. Search Operations (how values are found)")
-                print("3. Return to main menu")
+                while True:
+                    print("\nAlright, this is where the learning begins!")
+                    print("What are you curious about?\n")
+                    print("1. Traversals (how the tree is explored)")
+                    print("2. Search Operations (how values are found) [COMING SOON]")
+                    print("3. Return to main menu")
+
+                    try:
+                        choice = int(input("Pick a choice: "))
+                    except ValueError:
+                        print("Only numbers are accepted.")
+                        continue
+
+                    if choice == 1:
+                        print("Welcome to traversals. Which one would you like to explore?")
+                        print("1. Preorder Traversal  (Root-Left-Right)")
+                        print("2. Inorder Traversal   (Left-Root-Right)")
+                        print("3. Postorder Traversal (Left-Right-Root)")
+                        selection = int(input("Please let me know which one you want to learn first: "))
+                        if selection == 1:
+                            for step in preorder_step(tree.root):
+                                print(step)
+                                input("Press Enter")
+                        if selection == 2:
+                            for step in inorder_step(tree.root):
+                                print(step)
+                                input("Press Enter")
+                        if selection == 3: 
+                            for step in postorder_step(tree.root):
+                                print(step)
+                                input("Press Enter")
+                    elif choice == 2:
+                        print("This feature will be added soon!")
+                        print("You will learn how Breadth-First Search, Depth First Search, etc. work!")
+
+                    elif choice == 3:
+                        print("Returning to main menu...")
+                        break
+
+                    else:
+                        print("Invalid selection. Please choose 1–3.")
+
         elif option == 5:
             tree = None
             print("Loaded tree removed.")
