@@ -1,7 +1,7 @@
 from tree.persistence import save_tree, load_tree, display_tree
 from tree.binary_tree import Tree
 
-def run_cli(tree):
+def run_cli():
     tree = None 
     current_file = None
     terminated = False
@@ -113,8 +113,11 @@ Welcome to the tree learning widget
                             
                             try:
                                 value = int(input("Enter a number of the node: "))
-                                tree.insert(value)
-                                save_tree(tree,current_file)
+                                success = tree.insert(value)
+                                if not success:
+                                    print("No duplicates allowed.")
+                                else:
+                                    save_tree(tree, current_file)
                             except ValueError:
                                 print("Only numbers are accepted.")
                         
@@ -122,11 +125,10 @@ Welcome to the tree learning widget
 
                             try:
                                 value = int(input("Enter a number of the node: "))
-                                if value not in tree.insert_order:
-                                    print("The node doesn't exist inside the tree")
+                                if not tree.delete(value):
+                                    print("The node doesn't exist inside the tree.")
                                 else:
-                                    tree.delete(value)
-                                    save_tree(tree,current_file)
+                                    save_tree(tree, current_file)
                             except ValueError:
                                 print("Only numbers are accepted.")
                         elif choice == 3:

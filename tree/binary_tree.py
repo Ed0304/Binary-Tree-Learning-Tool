@@ -10,26 +10,37 @@ class Tree:
         if self.root is None:
             self.root = Node(value)
             self.insert_order.append(value)
-            return
-        self._insert_recursive(self.root, value)
+            return True
+
+        return self._insert_recursive(self.root, value)
 
     def _insert_recursive(self, current, value):
         if value < current.value:
             if current.left is None:
                 current.left = Node(value)
                 self.insert_order.append(value)
-            else:
-                self._insert_recursive(current.left, value)
+                return True
+            return self._insert_recursive(current.left, value)
 
         elif value > current.value:
             if current.right is None:
                 current.right = Node(value)
                 self.insert_order.append(value)
-            else:
-                self._insert_recursive(current.right, value)
+                return True
+            return self._insert_recursive(current.right, value)
+
+        else:
+            # 🚫 duplicate detected
+            return False
 
     def delete(self, value):
+        if value not in self.insert_order:
+            return False
+
         self.root = self._delete_recursive(self.root, value)
+        self.insert_order.remove(value)
+        return True
+
 
     def _delete_recursive(self, current, value):
         if current is None:
