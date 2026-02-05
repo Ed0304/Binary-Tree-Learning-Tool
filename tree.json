@@ -2,8 +2,10 @@
     "name": "test",
     "type": "BST",
     "insert_order": [
+        1,
         5,
         2,
-        7
+        9,
+        0
     ]
 }

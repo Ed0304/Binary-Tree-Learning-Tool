@@ -1,4 +1,4 @@
-from tree.persistence import save_tree, load_tree, display_tree
+from tree.persistence import save_tree, load_tree, display_upright
 from tree.binary_tree import Tree
 from tree.traversals import *
 def run_cli():
@@ -95,7 +95,16 @@ Welcome to the tree learning widget
             if tree is None or tree.root is None:
                 print("Please upload a tree first.")
             else:
-                display_tree(tree.root,0)
+                print('''📌 How to Read the Tree Display\n
+                      ⚠️ This tree is shown using a text (ASCII) diagram.\n
+                      Please read it like this:\n
+                      1. The root is the node where the tree splits into left and right branches.\n
+                      2. Lines going down-left represent LEFT children.\n
+                      3. Lines going down-right represent RIGHT children.\n
+                      4. The tree may not be perfectly centered — this is normal.\n
+                      5. Focus on connections, not alignment.\n
+                👉 This matches how trees are drawn in exams.''')
+                display_upright(tree.root)
         elif option == 3:
             print("Insert/Delete Node")
 
@@ -117,7 +126,7 @@ Welcome to the tree learning widget
 
                     if choice == 1:
                         print("Here's your tree:")
-                        display_tree(tree.root, 0)
+                        display_upright(tree.root)
 
                         try:
                             value = int(input("Enter a number of the node: "))
@@ -133,7 +142,8 @@ Welcome to the tree learning widget
 
                     elif choice == 2:
                         print("Here's your tree:")
-                        display_tree(tree.root, 0)
+                        display_upright(tree.root)
+                        print("Note: \nDeleting a node updates the current tree structure.\nThe original insertion order is kept for learning purposes.")
 
                         try:
                             value = int(input("Enter a number of the node: "))
@@ -178,18 +188,65 @@ Welcome to the tree learning widget
                         print("2. Inorder Traversal   (Left-Root-Right)")
                         print("3. Postorder Traversal (Left-Right-Root)")
                         selection = int(input("Please let me know which one you want to learn first: "))
+                        print("\nBefore we begin:")
+                        print("1️⃣ Draw the entire tree on paper.")
+                        print("2️⃣ Use arrows to trace how we move between nodes.")
+                        print("3️⃣ ONLY write down nodes when they are VISITED.\n")
+                        print("Here's the tree for your reference: ")
+                        display_upright(tree.root)
+                        input("Press Enter when you're ready to begin...")
+                        save_tree(tree,current_file)
                         if selection == 1:
+                            result = []
                             for step in preorder_step(tree.root):
-                                print(step)
-                                input("Press Enter")
+                                if isinstance(step, tuple):
+                                    step_type, message = step
+                                    if step_type == "move":
+                                        print("➡️", message)
+                                    elif step_type == "visit":
+                                        print("✍️ VISIT:", message, "→ mark this node")
+                                    elif step_type == "return":
+                                        print("↩️", message)
+
+                                elif isinstance(step, int):
+                                    result.append(step)
+                                    print("Current traversal result:", result)
+
+                                input("Press Enter to continue...")
                         if selection == 2:
+                            result = []
                             for step in inorder_step(tree.root):
-                                print(step)
-                                input("Press Enter")
+                                if isinstance(step, tuple):
+                                    step_type, message = step
+                                    if step_type == "move":
+                                        print("➡️", message)
+                                    elif step_type == "visit":
+                                        print("✍️ VISIT:", message, "→ mark this node")
+                                    elif step_type == "return":
+                                        print("↩️", message)
+
+                                elif isinstance(step, int):
+                                    result.append(step)
+                                    print("Current traversal result:", result)
+
+                                input("Press Enter to continue...")
                         if selection == 3: 
+                            result = []
                             for step in postorder_step(tree.root):
-                                print(step)
-                                input("Press Enter")
+                                if isinstance(step, tuple):
+                                    step_type, message = step
+                                    if step_type == "move":
+                                        print("➡️", message)
+                                    elif step_type == "visit":
+                                        print("✍️ VISIT:", message, "→ mark this node")
+                                    elif step_type == "return":
+                                        print("↩️", message)
+
+                                elif isinstance(step, int):
+                                    result.append(step)
+                                    print("Current traversal result:", result)
+
+                                input("Press Enter to continue...")
                     elif choice == 2:
                         print("This feature will be added soon!")
                         print("You will learn how Breadth-First Search, Depth First Search, etc. work!")

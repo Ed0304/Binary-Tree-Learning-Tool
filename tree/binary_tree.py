@@ -1,5 +1,5 @@
 from tree.node import Node
-
+from tree.traversals import *
 class Tree:
     def __init__(self, name = "Untitled Tree"):
         self.name = name
@@ -34,11 +34,10 @@ class Tree:
             return False
 
     def delete(self, value):
-        if value not in self.insert_order:
+        if not self.contains(value):
             return False
 
         self.root = self._delete_recursive(self.root, value)
-        self.insert_order.remove(value)
         return True
 
 
@@ -61,6 +60,20 @@ class Tree:
             current.right = self._delete_recursive(current.right, successor.value)
 
         return current
+    
+    def contains(self, value):
+        current = self.root
+
+        while current:
+            if value == current.value:
+                return True
+            elif value < current.value:
+                current = current.left
+            else:
+                current = current.right
+
+        return False
+
 
     def _min_value_node(self, node):
         while node.left is not None:

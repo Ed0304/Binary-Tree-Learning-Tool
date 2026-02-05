@@ -1,6 +1,7 @@
 import json
 from tree.binary_tree import Tree
 from tree.node import *
+
 def save_tree(tree: Tree, filename: str):
     data = {
         "name": tree.name,
@@ -26,13 +27,24 @@ def load_tree(filename: str) -> Tree:
 
     return tree
 
-def display_tree(node,level = 0):
+def display_upright(node, prefix="", is_left=True, is_root=True):
     if node is None:
-        return 
-    
-    display_tree(node.right,level+1)
-    print("   " * level + str(node.value))
-    display_tree(node.left,level+1)
+        return
+
+    if node.right:
+        new_prefix = prefix + ("│   " if not is_root and is_left else "    ")
+        display_upright(node.right, new_prefix, False, False)
+
+    if is_root:
+        print(prefix + str(node.value))
+    else:
+        connector = "└── " if is_left else "┌── "
+        print(prefix + connector + str(node.value))
+
+    if node.left:
+        new_prefix = prefix + ("    " if is_left else "│   ")
+        display_upright(node.left, new_prefix, True, False)
+
 
 
 
