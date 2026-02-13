@@ -1,0 +1,13 @@
+{
+    "name": "GUI Tree",
+    "type": "BST",
+    "insert_order": [
+        4,
+        6,
+        3,
+        1,
+        5,
+        7,
+        2
+    ]
+}

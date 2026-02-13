@@ -47,43 +47,45 @@ def inorder_step(node):
     if node is None:
         return
 
-    yield ("move", f"Go LEFT from node {node.value}")
+    yield ("move", node.value)
     yield from inorder_step(node.left)
 
-    yield ("visit", f"VISIT node {node.value} → write it down")
+    yield ("visit", node.value)
     yield node.value
 
-    yield ("move", f"Go RIGHT from node {node.value}")
+    yield ("move", node.value)
     yield from inorder_step(node.right)
 
-    yield ("return", f"RETURN to parent of {node.value}")
+    yield ("return", node.value)
 
 def preorder_step(node):
     if node is None:
         return
 
-    yield ("visit", f"VISIT node {node.value} → write it down")
+    yield ("visit", node.value)
     yield node.value
 
-    yield ("move", f"Go LEFT from node {node.value}")
+    yield ("move", node.value)
     yield from preorder_step(node.left)
 
-    yield ("move", f"Go RIGHT from node {node.value}")
+    yield ("move", node.value)
     yield from preorder_step(node.right)
 
-    yield ("return", f"RETURN to parent of {node.value}")
+    yield ("return", node.value)
+
 
 def postorder_step(node):
     if node is None:
         return
 
-    yield ("move", f"Go LEFT from node {node.value}")
+    yield ("move", node.value)
     yield from postorder_step(node.left)
 
-    yield ("move", f"Go RIGHT from node {node.value}")
+    yield ("move", node.value)
     yield from postorder_step(node.right)
 
-    yield ("visit", f"VISIT node {node.value} → write it down")
+    yield ("visit", node.value)
     yield node.value
 
-    yield ("return", f"RETURN to parent of {node.value}")
+    yield ("return", node.value)
+
