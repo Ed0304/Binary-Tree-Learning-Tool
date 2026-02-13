@@ -9,9 +9,12 @@ from PySide6.QtWidgets import QFileDialog
 from ui.tree_canvas import TreeCanvas
 from ui.tree_controller import TreeController
 from PySide6.QtWidgets import QMessageBox
+from PySide6.QtWidgets import QInputDialog
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.is_modified = False
         self.statusBar().showMessage("Ready.")
         self.setWindowTitle("Binary Tree Visualizer v1.0")
         self.resize(900, 600)
@@ -57,6 +60,7 @@ class MainWindow(QMainWindow):
         self.insert_btn = QPushButton("Insert Node")
         self.delete_btn = QPushButton("Delete Node")
         self.create_btn = QPushButton("Create Tree")
+        self.rename_btn = QPushButton("Rename Tree")
         self.reset_btn = QPushButton("Reset")
         self.save_btn = QPushButton("Save")
         self.save_as_btn = QPushButton("Save As")
@@ -75,6 +79,8 @@ class MainWindow(QMainWindow):
         self.save_btn.clicked.connect(self.save_tree)
         self.save_as_btn.clicked.connect(self.save_tree_as)
         self.load_btn.clicked.connect(self.load_tree)
+        self.rename_btn.clicked.connect(self.rename_tree)
+
 
         tree_controls.addWidget(self.value_input)
         tree_controls.addWidget(self.insert_btn)
@@ -84,6 +90,7 @@ class MainWindow(QMainWindow):
         tree_controls.addWidget(self.save_btn)
         tree_controls.addWidget(self.save_as_btn)
         tree_controls.addWidget(self.load_btn)
+        tree_controls.addWidget(self.rename_btn)
         layout.addLayout(tree_controls)
 
         # ---- Traversal Controls ----
@@ -106,6 +113,9 @@ class MainWindow(QMainWindow):
     
     def create_tree(self):
         text = self.value_input.text()
+        self.controller.current_file = None  # new tree not yet saved
+        self.update_window_title()
+        
 
         if not text:
             QMessageBox.warning(self, "Input Required", "Please enter a value for the root.")
@@ -117,6 +127,9 @@ class MainWindow(QMainWindow):
             self.canvas.draw_tree(self.controller.tree.root)
             self.statusBar().showMessage("Tree created successfully.", 3000)
             self.explanation_label.setText("Tree created. Select a traversal.")
+            self.is_modified = True
+            self.update_window_title()
+            
         except ValueError:
             QMessageBox.critical(self, "Invalid Input", "Root value must be an integer.")
 
@@ -135,6 +148,8 @@ class MainWindow(QMainWindow):
             if success:
                 self.canvas.draw_tree(self.controller.tree.root)
                 self.statusBar().showMessage(f"Inserted {value}.", 3000)
+                self.is_modified = True
+                self.update_window_title()
             else:
                 QMessageBox.warning(self, "Duplicate Value", "No duplicates allowed.")
 
@@ -156,6 +171,8 @@ class MainWindow(QMainWindow):
             if success:
                 self.canvas.draw_tree(self.controller.tree.root)
                 self.statusBar().showMessage(f"Deleted {value}.", 3000)
+                self.is_modified = True
+                self.update_window_title()
             else:
                 QMessageBox.warning(self, "Not Found", "Node not found in tree.")
 
@@ -164,7 +181,19 @@ class MainWindow(QMainWindow):
 
 
     def reset_tree(self):
+        if self.is_modified:
+            reply = QMessageBox.question(
+                self,
+                "Unsaved Changes",
+                "You have unsaved changes. Continue without saving?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+
+            if reply == QMessageBox.No:
+                return
         self.controller.tree = None
+        self.controller.current_file = None
+        self.update_window_title()
         self.start_btn.setEnabled(False)
         self.next_btn.setEnabled(False)
         self.reset_traversal_btn.setEnabled(False)
@@ -181,6 +210,9 @@ class MainWindow(QMainWindow):
 
         self.controller.save()
         self.statusBar().showMessage("Tree saved.", 3000)
+        self.is_modified = False
+        self.update_window_title()
+
     
     def save_tree_as(self):
         if not self.controller.tree:
@@ -193,24 +225,47 @@ class MainWindow(QMainWindow):
             "",
             "JSON Files (*.json)"
         )
+        self.update_window_title()
 
         if file_path:
             self.controller.current_file = file_path
             self.controller.save()
             self.statusBar().showMessage("Tree saved as new file.", 3000)
+            self.is_modified = False
+            self.update_window_title()
+
 
 
     
     def load_tree(self):
+
+        if self.is_modified:
+            reply = QMessageBox.question(
+                self,
+                "Unsaved Changes",
+                "You have unsaved changes. Continue without saving?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+
+            if reply == QMessageBox.No:
+                return
+            
         file_path, _ = QFileDialog.getOpenFileName(
             self,
             "Load Tree",
             "",
             "JSON Files (*.json)"
         )
+        self.update_window_title()
+
+        
+
 
         if file_path:
             tree = self.controller.load_tree(file_path)
+            self.is_modified = False
+            self.update_window_title()
+
 
             if tree and tree.root:
                 self.canvas.draw_tree(tree.root)
@@ -312,6 +367,64 @@ class MainWindow(QMainWindow):
         self.reset_traversal_btn.setEnabled(False)
         self.explanation_label.setText("Traversal reset.")
         self.statusBar().showMessage("Traversal reset.", 3000)
+    def update_window_title(self):
+        base_title = "Binary Tree Visualizer v1.0"
+
+        tree_name = ""
+        file_name = ""
+
+        if self.controller.tree and hasattr(self.controller.tree, "name"):
+            tree_name = self.controller.tree.name
+
+        if self.controller.current_file:
+            import os
+            file_name = os.path.basename(self.controller.current_file)
+
+        title = base_title
+
+        if tree_name:
+            title += f" - {tree_name}"
+
+        if file_name:
+            title += f" [{file_name}]"
+
+        if self.is_modified:
+            title += " *"
+
+        self.setWindowTitle(title)
+
+    
+    def rename_tree(self):
+        if not self.controller.tree:
+            QMessageBox.warning(self, "No Tree", "Create or load a tree first.")
+            return
+
+        new_name, ok = QInputDialog.getText(
+            self,
+            "Rename Tree",
+            "Enter new tree name:"
+        )
+
+        if ok and new_name.strip():
+            self.controller.tree.name = new_name.strip()
+            self.is_modified = True
+            self.update_window_title()
+            self.statusBar().showMessage("Tree renamed.", 3000)
+    def closeEvent(self, event):
+        if self.is_modified:
+            reply = QMessageBox.question(
+                self,
+                "Unsaved Changes",
+                "You have unsaved changes. Exit anyway?",
+                QMessageBox.Yes | QMessageBox.No
+            )
+
+            if reply == QMessageBox.No:
+                event.ignore()
+                return
+
+        event.accept()
+
 
     
 
