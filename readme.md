@@ -5,7 +5,6 @@ TreeVisual is a self-directed desktop project built to strengthen my understandi
 It is a **fully offline, cross-platform binary tree learning widget**, packaged as:
 
 - 🪟 Windows executable  
-- 🍎 macOS executable  
 - ❌ No internet required  
 - ❌ No additional setup  
 
