@@ -368,7 +368,7 @@ class MainWindow(QMainWindow):
         self.explanation_label.setText("Traversal reset.")
         self.statusBar().showMessage("Traversal reset.", 3000)
     def update_window_title(self):
-        base_title = "Binary Tree Visualizer v1.0"
+        base_title = "TreeVisual v1.0 "
 
         tree_name = ""
         file_name = ""
