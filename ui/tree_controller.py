@@ -36,9 +36,16 @@ class TreeController:
     def delete(self, value):
         if not self.tree:
             return False
+
         success = self.tree.delete(value)
+
+        if success:
+            if value in self.tree.insert_order:
+                self.tree.insert_order.remove(value)
+
         self.save()
         return success
+
 
     def get_traversal_generator(self, traversal_type):
         if not self.tree:

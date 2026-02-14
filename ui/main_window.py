@@ -16,7 +16,7 @@ class MainWindow(QMainWindow):
         super().__init__()
         self.is_modified = False
         self.statusBar().showMessage("Ready.")
-        self.setWindowTitle("Binary Tree Visualizer v1.0")
+        self.setWindowTitle("TreeVisual v1.0- A free, offline binary tree learning companion")
         self.resize(900, 600)
         self.controller = TreeController()
 
